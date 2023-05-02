@@ -73,7 +73,7 @@ function addcarrinho(item){
     quantidade: 1,
   })
 }
-function addquant (index){
+function addquant(index){
     produtos.value[index].quantidade++
   }
 </script>
@@ -82,7 +82,7 @@ function addquant (index){
   <ul>
     <li v-for="(item, index) in produtos" :key="index">Item: {{ item.nome }} Valor: {{ item.preco }} Quantidade: {{ item.quantidade }}
       <button @click="addcarrinho(item)">adicionar ao carrinho</button>
-      <button @click="addquant()">+</button>
+      <button @click="addquant(item.id-1)">+</button>
     </li>
   </ul>
   <div class="carrinho">
