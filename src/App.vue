@@ -63,24 +63,35 @@ const produtos = ref([
         quantidade: 1
     }
 ])
-const carrinho = ref([])
-
+let carrinho = ref([])
 function addcarrinho(item){
   carrinho.value.push({
     codigo: item.id,
     nome: item.nome,
     preco: item.preco,
-    quantidade: 1,
+    quantidade: item.quantidade,
+    valortotal: item.preco * item.quantidade
   })
 }
 function addquant(index){
     produtos.value[index].quantidade++
+    // somaitem.value = item.preco * item.quantidade
   }
+
+function limpacarrinho(){
+  carrinho.value = []
+}
+function remover(index) {
+    carrinho.value.splice(index, 1)
+  }
+
+const  avf = (value) => "R$ " + value.toFixed(2).replace('.',',')
+
 </script>
 
 <template>
   <ul>
-    <li v-for="(item, index) in produtos" :key="index">Item: {{ item.nome }} Valor: {{ item.preco }} Quantidade: {{ item.quantidade }}
+    <li v-for="(item, index) in produtos" :key="index">Item: {{ item.nome }} Valor: {{ avf(item.preco) }} Quantidade: {{ item.quantidade }}
       <button @click="addcarrinho(item)">adicionar ao carrinho</button>
       <button @click="addquant(item.id-1)">+</button>
     </li>
@@ -88,8 +99,10 @@ function addquant(index){
   <div class="carrinho">
     <p>carrinho</p>
 <ul>
-  <li v-for="(item, index) in carrinho" :key="index">{{ item.nome }} {{ item.preco }} {{ item.quantidade }}</li>
+  <li v-for="(item, index) in carrinho" :key="index">{{ item.nome }} {{ avf(item.preco) }} {{ item.quantidade }} valor total {{ avf(item.valortotal) }}
+  <button @click="remover(index)">remover</button></li>
 </ul>
+  <button @click="limpacarrinho()">limpa carrinho</button>
   </div>
 </template>
 
