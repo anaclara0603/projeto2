@@ -55,27 +55,44 @@ const produtos = ref([
     nome: 'Cueca',
     preco: 19.90,
     quantidade: 1
-  },
-  {
-    id: 10,
-    nome: 'Meia',
-    preco: 9.90,
-    quantidade: 1
   }
 ])
 let enviar = ref(false)
 let carrinho = ref([])
+
 function addcarrinho(item) {
-  carrinho.value.push({
-    codigo: item.id,
-    nome: item.nome,
-    preco: item.preco,
-    quantidade: item.quantidade,
-    valortotal: item.preco * item.quantidade
-  })
+  const index = carrinho.value.findIndex(x => x.codigo === item.id)
+  if (index > -1) {
+    alert('item já está no carrinho')
+  }
+  else {
+    carrinho.value.push({
+      codigo: item.id,
+      nome: item.nome,
+      preco: item.preco,
+      quantidade: item.quantidade,
+      valortotal: item.preco * item.quantidade
+    })
+    calculacarrinho()
+  }
+
 }
+
+let valorcarrinho = ref(0)
+function calculacarrinho() {
+  valorcarrinho.value = 0
+  for (let index = 0; index < carrinho.value.length; index++) {
+    valorcarrinho.value = valorcarrinho.value + carrinho.value[index].valortotal
+  }
+}
+
 function addquant(index) {
   produtos.value[index].quantidade++
+  // somaitem.value = item.preco * item.quantidade
+}
+
+function removerquant(index) {
+  if (produtos.value[index].quantidade > 1) { produtos.value[index].quantidade-- }
   // somaitem.value = item.preco * item.quantidade
 }
 
@@ -84,9 +101,15 @@ function limpacarrinho() {
 }
 function remover(index) {
   carrinho.value.splice(index, 1)
+  calculacarrinho()
 }
-function vercarrinho(){
-  enviar.value = !enviar.value
+function vercarrinho() {
+  if(carrinho.value < [0]){
+    alert('carrinho vazio')
+  }
+  else{
+    enviar.value = !enviar.value
+  }
 }
 
 const avf = (value) => "R$ " + value.toFixed(2).replace('.', ',')
@@ -96,23 +119,31 @@ const avf = (value) => "R$ " + value.toFixed(2).replace('.', ',')
 <template>
   <div class="produtos">
     <ul>
-      <li v-for="(item, index) in produtos" :key="index">Item: {{ item.nome }} Valor: {{ avf(item.preco) }} Quantidade: {{
-        item.quantidade }}
-        <button @click="addcarrinho(item)">adicionar ao carrinho</button>
-        <button @click="addquant(item.id - 1)">+</button>
+      <li v-for="(item, index) in produtos" :key="index">
+        <p>Item: {{ item.nome }}</p>
+        <p>Valor: {{ avf(item.preco) }}</p>
+        <p>Quantidade: {{ item.quantidade }}</p>
+        <p><button @click="addcarrinho(item)">adicionar ao carrinho</button>
+          <button @click="addquant(item.id - 1)">+</button>
+          <button @click="removerquant(index)">-</button>
+        </p>
       </li>
     </ul>
   </div>
   <button @click="vercarrinho()">Ver carrinho</button>
   <div v-if="enviar" class="carrinho">
-    <p>carrinho</p>
     <ul>
-      <li v-for="(item, index) in carrinho" :key="index">{{ item.nome }} {{ avf(item.preco) }} {{ item.quantidade }} valor
-        total {{ avf(item.valortotal) }}
+      <li v-for="(item, index) in carrinho" :key="index">
+        <p>Produto: {{ item.nome }}</p>
+        <p>Preço:{{ avf(item.preco) }}</p>
+        <p>Quantidade: {{ item.quantidade }}</p>
+        <p>valor total {{ avf(item.valortotal) }}</p>
         <button @click="remover(index)">remover</button>
       </li>
     </ul>
-    <button @click="limpacarrinho()">limpa carrinho</button>
+    <p>Valor total: {{ avf(valorcarrinho) }}</p>
+    <button @click="limpacarrinho()">limpa carrinho</button> <button @click="vercarrinho()">Fechar Carrinho</button>
+
   </div>
 </template>
 
