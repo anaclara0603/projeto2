@@ -164,6 +164,7 @@ li{
   justify-content: center;
   align-items: center;
   text-align: center;
+  list-style: none;
 }
 button{
   margin: 3px;
