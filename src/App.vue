@@ -98,6 +98,7 @@ function removerquant(index) {
 
 function limpacarrinho() {
   carrinho.value = []
+  valorcarrinho.value = 0
 }
 function remover(index) {
   carrinho.value.splice(index, 1)
@@ -118,19 +119,20 @@ const avf = (value) => "R$ " + value.toFixed(2).replace('.', ',')
 
 <template>
   <div class="produtos">
+    <h1>MIAUMIAUMIAU</h1>
     <ul>
       <li v-for="(item, index) in produtos" :key="index">
         <p>Item: {{ item.nome }}</p>
         <p>Valor: {{ avf(item.preco) }}</p>
         <p>Quantidade: {{ item.quantidade }}</p>
-        <p><button @click="addcarrinho(item)">adicionar ao carrinho</button>
-          <button @click="addquant(item.id - 1)">+</button>
-          <button @click="removerquant(index)">-</button>
+        <p><button class="btn btn-dark btn-sm" @click="addcarrinho(item)">adicionar ao carrinho</button>
+          <button class="btn btn-dark btn-sm" @click="addquant(item.id - 1)">+</button>
+          <button class="btn btn-dark btn-sm" @click="removerquant(index)">-</button>
         </p>
       </li>
     </ul>
+    <button class="btn btn-dark btn-lg" @click="vercarrinho()">Ver carrinho</button>
   </div>
-  <button @click="vercarrinho()">Ver carrinho</button>
   <div v-if="enviar" class="carrinho">
     <ul>
       <li v-for="(item, index) in carrinho" :key="index">
@@ -138,13 +140,40 @@ const avf = (value) => "R$ " + value.toFixed(2).replace('.', ',')
         <p>Preço:{{ avf(item.preco) }}</p>
         <p>Quantidade: {{ item.quantidade }}</p>
         <p>valor total {{ avf(item.valortotal) }}</p>
-        <button @click="remover(index)">remover</button>
+        <button class="btn btn-dark btn-sm" @click="remover(index)">remover</button>
       </li>
     </ul>
     <p>Valor total: {{ avf(valorcarrinho) }}</p>
-    <button @click="limpacarrinho()">limpa carrinho</button> <button @click="vercarrinho()">Fechar Carrinho</button>
-
+    <button class="btn btn-dark btn-sm" @click="limpacarrinho()">limpa carrinho</button> 
+    <button class="btn btn-dark btn-sm" @click="enviar = !enviar">Fechar Carrinho</button>
+    aaa
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+ul {
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+align-items: center;
+justify-content: space-around;
+width: 90%;
+margin: 20px;
+}
+li{
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+button{
+  margin: 3px;
+}
+p{
+  font-size: large;
+}
+.produtos{
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+</style>
